@@ -1,30 +1,23 @@
 import random
-import art
+# import art
 
-def pick_user_cards(card_list, score):
-    user_card = random.choice(card_list)
-    cards_picked["user"].append(user_card)
-    score += user_card
+def pick_player_cards(player, card_list, score):
+    player_card = random.choice(card_list)
+    cards_picked[player].append(player_card)
+    score += player_card
     return score
-
-def pick_computer_cards(card_list, score):
-    computer_card = random.choice(card_list)
-    cards_picked["computer"].append(computer_card)
-    score += computer_card
-    return score
-
-def choose_winner(user_score, computer_score):
-    if user_score > computer_score and user_score <= 21:
-        result = "User"
-    elif computer_score > user_score and computer_score <= 21:
-        result = "Computer"
-    elif user_score == computer_score:
-        result = "Draw"
-    return result
 
 def is_blackjack(score):
     if score == 21:
         return True
+    
+def choose_winner(player1_score, player2_score):
+    if player1_score > player2_score or player2_score > 21:
+        print("You win 😃")
+    elif player2_score > player1_score:
+        print("You lose 😤")
+    elif player1_score == player2_score:
+        print("Draw")
 
 def display_result():
     print(f"Your cards: {cards_picked['user']}, current score: {user_score}")
@@ -39,7 +32,7 @@ cards = [11, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
 play = str(input("Do you want to play a game of Blackjack? Type \'y\' or \'n\': "))
 while play == "y":
     print("\n" * 50)
-    print(art.logo)
+    print("art.logo")
 
     cards_picked = {
         "user": [],
@@ -49,8 +42,8 @@ while play == "y":
     computer_score = 0
 
     for card in range(2):
-        user_score = pick_user_cards(cards, user_score)
-        computer_score = pick_computer_cards(cards, computer_score)
+        user_score = pick_player_cards("user", cards, user_score)
+        computer_score = pick_player_cards("computer", cards, computer_score)
 
     # print(f"Your cards: {cards_picked['user']}, current score: {user_score}")
     # print(f"Computer's first card: {cards_picked['computer'][0]}")
@@ -64,7 +57,7 @@ while play == "y":
     else:
         draw_card = str(input("Type \'y\' to get another card, type \'n\' to pass: "))
         while draw_card == "y":
-            user_score = pick_user_cards(cards, user_score)
+            user_score = pick_player_cards("user", cards, user_score)
             display_result()
             if user_score > 21:
                 display_final_result()
@@ -73,15 +66,11 @@ while play == "y":
             else:
                 draw_card = str(input("Type \'y\' to get another card, type \'n\' to pass: "))
 
-        while computer_score < 21:
-            computer_score = pick_computer_cards(cards, computer_score)
+        while computer_score < 17:
+            computer_score = pick_player_cards("computer", cards, computer_score)
 
-        display_final_result()
-        if choose_winner(user_score, computer_score) == "User":
-            print("You win 😃")
-        elif choose_winner(user_score, computer_score) == "Computer":
-            print("You lose 😤")
-        else:
-            print("Draw")
+        if user_score <= 21:
+            display_final_result()
+            choose_winner(user_score, computer_score)
 
-    play = str(input("Do you want to play a game of Blackjack? Type \'y\' or \'n\': "))
+    play = str(input("\nDo you want to play a game of Blackjack? Type \'y\' or \'n\': "))
