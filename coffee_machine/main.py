@@ -22,14 +22,14 @@ def print_report(resource_available, total_money):
       total_money (float)
     """
     for ingredient in resource_available:
-        if ingredient == "Coffee":
+        if ingredient == "coffee":
             print(f"{ingredient.capitalize()}: {resource_available[ingredient]}g")
         else:
             print(f"{ingredient.capitalize()}: {resource_available[ingredient]}ml")
     print(f"Money: ${total_money}")
 
 
-def is_resource_suffient(resource_available, resource_requested):
+def is_resource_sufficient(resource_available, resource_requested):
     """
     Checking whether the resource left is enough
     to serve new request.
@@ -40,7 +40,6 @@ def is_resource_suffient(resource_available, resource_requested):
     """
     for ingredient in resource_requested:
         if resource_available[ingredient] < resource_requested[ingredient]:
-            print(f"Sorry there is not enough {ingredient}")
             return False
     return True
     
@@ -103,7 +102,7 @@ def main():
             print_report(resources, total_income)
         else:
             drink = MENU[choice]
-            enough_resources = is_resource_suffient(resources, drink["ingredients"])
+            enough_resources = is_resource_sufficient(resources, drink["ingredients"])
             if enough_resources:
                 # ask to insert the coins
                 print("Please insert coins.")
@@ -116,6 +115,8 @@ def main():
                     for ingredient in drink["ingredients"]:
                         resources[ingredient] -= drink["ingredients"][ingredient]
                     print(f"Here is your {choice}. Enjoy!")
+                else:
+                    print(f"Sorry there is not enough {ingredient}")
 
         choice = user_input()
                 
