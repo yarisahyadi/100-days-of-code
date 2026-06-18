@@ -1,43 +1,59 @@
+def user_input():
+    """
+    Asking the user input regarding their menu choice
+    Output: a string of user's choice
+    """
+    return input("What would you like? (espresso/latte/cappuccino): ").lower()
+
 def turning_off():
     """
     Turning off the machine when maintainers
-    enter the secret code "off"
+    enter the secret code "off".
     """
-    print("Closing all running application...")
+    print("Closing all running applications...")
     print("Powering off")
 
 def print_report(resource_available, total_money):
     """
     Displaying the resource available and total income
-    when the maintainers enter the secret code "report"
+    when the maintainers enter the secret code "report".
+    Input: 
+      resource_available (dictionary)
+      total_money (float)
     """
+    for ingredient in resource_available:
+        if ingredient == "Coffee":
+            print(f"{ingredient.capitalize()}: {resource_available[ingredient]}g")
+        else:
+            print(f"{ingredient.capitalize()}: {resource_available[ingredient]}ml")
+    print(f"Money: ${total_money}")
 
 
 def is_resource_suffient(resource_available, resource_requested):
     """
     Checking whether the resource left is enough
-    to serve new request
-
+    to serve new request.
     Input: 
       resource_available (dictionary)
       resource_requested (dictionary)
     Output: True of False
     """
-    for ingredient in resource_available:
-        if ingredient not in resource_requested:
-            continue
-        elif resource_available[ingredient] < resource_requested[ingredient]:
+    for ingredient in resource_requested:
+        if resource_available[ingredient] < resource_requested[ingredient]:
             print(f"Sorry there is not enough {ingredient}")
             return False
     return True
-
-def is_enough_money(money_inserted, menu_cost):
+    
+def calculate_money():
     """
-    Compare the user's money with actual menu cost
+    Function to calculate total of the money inserted by the user.
+    Output: float
     """
-    if money_inserted < menu_cost:
-        print("Sorry that's not enough money. Money refunded")
-        return False
+    quarters_qty = int(input("how many quarters?: "))
+    dimes_qty = int(input("how many dimes?: "))
+    nickels_qty = int(input("how many nickels?: "))
+    pennies_qty = int(input("how many pennies?: "))
+    return quarters_qty * 0.25 + dimes_qty * 0.1 + nickels_qty * 0.05 + pennies_qty * 0.01
 
 def main():
     MENU = {
@@ -77,32 +93,33 @@ def main():
     total_income = 0
 
     # ask user the input
-    choice = input("What would you like? (espresso/latte/cappuccino): ").lower()
+    choice = user_input()
     while choice not in VALID_MENU and choice not in OPERATIONAL_MENU:
         print("Invalid input")
-        choice = input("What would you like? (espresso/latte/cappuccino): ").lower()
+        choice = user_input()
     
-    if choice == "off":
-        turning_off
-        return
-    else:
+    while choice != "off":
         if choice == "report":
             print_report(resources, total_income)
-            choice = input("What would you like? (espresso/latte/cappuccino): ").lower()
         else:
-            enough_resources = is_resource_suffient(resources, MENU[choice]["ingredients"])
-            enough_money = True
-            while enough_resources:
-                # if user is the maintainer and want the report
-                
-                    # ask to insert the coins
-                    print("Please insert coins.")
-                    quarters_qty = int(input("how many quarters?: "))
-                    dimes_qty = int(input("how many dimes?: "))
-                    nickles_qty = int(input("how many nickels?: "))
-                    pennies = int(input("how many pennies?: "))
-                    enough_money = is_enough_money()
+            drink = MENU[choice]
+            enough_resources = is_resource_suffient(resources, drink["ingredients"])
+            if enough_resources:
+                # ask to insert the coins
+                print("Please insert coins.")
+                money = calculate_money()
+                if money >= drink["cost"]:
+                    if money > drink["cost"]:
+                        change = round(money - drink["cost"], 2)
+                        print(f"Here is ${change} dollars in change.")
+                    total_income += drink["cost"]
+                    for ingredient in drink["ingredients"]:
+                        resources[ingredient] -= drink["ingredients"][ingredient]
+                    print(f"Here is your {choice}. Enjoy!")
 
-        
+        choice = user_input()
+                
+    turning_off()
+    return
 
 main()
