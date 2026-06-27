@@ -1,6 +1,12 @@
-class Question:
-    def __init__(self, text, answer):
-        self.text = text
-        self.answer = answer
+class QuizBrain:
+    def _init_(self, question_list):
+        self.question_number = 0
+        self.question_list = question_list
 
-question_1 = Question("What is 2 + 2?", "4")
+    def still_has_question(self):
+        return self.question_number != len(self.question_list)
+
+    def next_question(self):
+        self.current_question = self.question_list[self.question_number].text
+        self.question_number += 1
+        input(f"Q.{self.question_number} {self.current_question} (True/False)?: ")
